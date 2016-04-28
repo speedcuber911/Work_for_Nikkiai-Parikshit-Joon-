@@ -1,0 +1,33 @@
+.navimage{
+width: 100%;
+  margin: -10%;
+  margin-top: 10%;
+}
+#myModal{
+  position: absolute;
+  top: 47%;
+}
+.topcorner{
+  position:absolute;
+  top:0;
+  font-size:14px;
+  right:2%;
+}
+#banner{
+  background-color: #333447;
+  background-image: url("http://pixelarity.com/items/demos/elevation/red/assets/css/images/banner.svg");
+  background-position: 25% bottom;
+  background-repeat: repeat-x;
+  background-size: 1500px 300px;
+  color: #fff;
+  padding: 10em 0 14em 0;
+  text-align: center;
+}
+.style-2 {
+outline:none;
+border:none
+}
+.style-2:focus,.style-2.focus {
+outline:none;
+border:none;
+}

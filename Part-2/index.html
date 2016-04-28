@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RSS_FEED_READER</title>
+  <script src="bootstrap.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+  google.load("feeds", "1")
+  </script>
+  <script type="text/javascript">
+  function hider(identity)
+        {
+          $("#" + identity.substring(4)).hide("slow")//Hides the new elements on click
+        }
+
+  $(window).load(function(){//Runs when the webpage is Loaded
+        $('#myModal').modal('show');
+
+        var today = new Date()//For printing the date-time in ISO 8601 format
+        today = today.toISOString();
+        console.log(today);
+        $(".topcorner").html(today);
+
+  });
+
+  var content_tabs = ["one","two","three","four","five","six","seven","eight","nine","ten"];//An array to reference news items with unique id's
+  function content_tab_builder()//Once the user Enters No. of entries to display upto 10 this builds up n news items
+  {
+       var j = 0;
+       for(var i=0; i<$(".style-2").val();i++)
+        {
+          $("#main_body").append($(".content_tab_wrapper").html());
+          j = i+1;
+          $("#main_body > div:nth-child(" + j +"").attr("id",content_tabs[i]);
+          $("#" + content_tabs[i] + " > div.col-md-10 > div.panel.panel-primary > div.panel-heading > div > div.col-md1 > img").attr("id","hide" + content_tabs[i]);
+
+        }
+  }
+  function dispfeed()//Initialises the google API and also displays the no. of news items requested by the user
+  {
+      var feeder=new google.feeds.Feed("http://www.reddit.com/.rss");
+      feeder.setNumEntries($(".style-2").val());
+      feeder.setResultFormat(google.feeds.Feed.JSON_FORMAT);
+      feeder.load(show_feed);
+      document.getElementById("feed_load").innerHTML= $(".style-2").val() + " Feeds Were Loaded";
+
+
+  }
+  function show_feed(data){ //The main function for showing data that is obtained as the rss feed.From reddit
+    if(!data.error){
+      var feeds = data.feed.entries;
+      for (var i=0; i<feeds.length; i++)
+
+      {
+        var content= feeds[i].content;//Extracting only Image from the content box and displaying it
+        document.querySelector('#sorter').innerHTML=content;
+        var im = document.querySelector('#sorter').querySelector('img')
+        if(!im)//If some post does not have an image
+          {
+            $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-body > div > div.col-md-3 ").html("<img src = 'unavailable.png'>");
+            $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-body > div > div.col-md-3 > img").addClass("navimage");
+           $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-heading > div > div.col-md-11").html("<a style='color:#fff' href='" + feeds[i].link + "'>" + feeds[i].title + "</a>");
+           $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-body > div > div.col-md-9 > div.author").html("<h3>The article has been written by  </h3>" + feeds[i].autho + " For reading furthe click the title, for closing/hiding a post click the icon above ");
+
+
+         }
+        else {//
+          $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-body > div > div.col-md-3 ").html(im);
+          $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-heading > div > div.col-md-11").html("<a style='color:#fff' href='" + feeds[i].link + "'>" + feeds[i].title + "</a>");
+          $("#" +  content_tabs[i] + "> div.col-md-10 > div > div.panel-body > div > div.col-md-9 > div.author").html("<h3>The article has been written by  </h3>" + feeds[i].author+ " For reading furthe click the title, for closing/hiding a post click the icon above ");
+        }
+      }
+
+
+    }
+
+  }
+
+  </script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+     //Included bootstrap from 2 sourcces that is CSS and javascript Library
+     </script>
+    </head>
+  <body>
+    <div style="position:absolute;left:100%;bottom:100%" id="sorter">
+          <!-- Used as a refernce div where I store components obtained from the api and pic the images -->
+    </div>
+    <!-- Modal Window for accepting input -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <h2 class="modal-title">Feeds To Load: <input type="text" style="vertical-align:top;"class="style-2 " placeholder="eg(1,2,3...10)" autofocus>
+            <button type="button" style:"position:relative;top:-20%;" class="close" data-dismiss="modal" onclick="dispfeed(); content_tab_builder();"><span class="glyphicon glyphicon-ok"></span></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+<section id ="banner">
+  <div class="topcorner">
+  </div>
+  <div class="container text-center">
+    <span style="font-size:65px">RSS Feed Reader</span><br>
+    <span style="color:#e96c77;font-size:32px">Reddit's homepage</span>
+  </div>
+  </section>
+<header class="major"><h3 id="feed_load" style="color:#555555;text-align:center;"></h3></header>
+
+<div class="content_tab_wrapper" style="display:none">
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div class="panel panel-primary">
+      <div class="panel-heading"style="text-align:center";>
+        <div class="row">
+              <div class="col-md-11"></div>
+              <div class="col-md1"><img style="width: 4%;cursor:pointer;margin: -20px;" src="hide.png" onclick="hider(this.id)"></div>
+        </div>
+      </div>
+      <div class="panel-body">
+          <div class = "row">
+            <div class="col-md-3"></div>
+            <div class="col-md-9">
+            <div class="author"> </div>
+            </div>
+          </div>
+  </div></div>
+      <div class="col-md-1"></div>
+  </div>
+</div>
+</div>
+
+<div class="container" id="main_body">
+
+</div>
+</body>
+</html>
